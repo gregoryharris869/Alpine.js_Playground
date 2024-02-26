@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.x-cloak {
-  @apply display: none;
+[x-cloak] {
+  @apply hidden !important;
 }
