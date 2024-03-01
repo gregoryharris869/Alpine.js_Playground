@@ -8,66 +8,117 @@
       defer
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
+      integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
 
     <title>Alpine.js Playground</title>
   </head>
   <body>
     <div class="container max-w-sm mx-auto mt-6">
-      <h1 class="mb-4 text-5xl text-center">Alpine.js Demo</h1>
-      <!-- x-data alpine component-->
-      <div x-data="{open:false, name: 'Greg', search:'', }">
-        <!-- x-on & x-bind -->
+      <h1 class="mb-4 text-5xl">Alpine.js Demo</h1>
+
+      <!-- x-data - Declare a new Alpine component and its data for a block of HTML -->
+      <div
+        x-data="{
+        open: false, 
+        name: 'Brad',
+        search: '',
+        posts: [
+          {title: 'Post One'},
+          {title: 'Post Two'},
+          {title: 'Post Three'},
+          {title: 'Post Four'},
+        ]
+      }"
+      >
+        <!-- x-on - Listen for browser events on an element -->
+        <!-- You can also use @click -->
+        <!-- x-bind - Dynamically set HTML attributes on an element -->
         <button
           x-on:click="open = !open"
-          x-bind:class="open ? 'bg-blue-800': ' bg-gray-700'"
+          :class="open ? 'bg-blue-800' : 'bg-black'"
           class="px-4 py-2 text-white rounded-xl"
         >
           Toggle
         </button>
-        <!-- x-show -->
+
+        <!-- x-show - Toggle the visibility of an element-->
         <div x-show="open" x-transition x-cloak>
           <p class="p-4 my-6 bg-gray-200 rounded">
-            Against salvation decrepit spirit of faithful christianity grandeur
-            eternal-return joy selfish virtues enlightenment. Transvaluation
-            evil justice deceptions gains. God snare.
+            Deceptions god reason sexuality faithful selfish against. War
+            marvelous will fearful sexuality deceptions snare madness.
+            Ubermensch love spirit spirit inexpedient. Society value against
+            oneself intentions transvaluation philosophy derive holiest pious.
+            Faith christian enlightenment decrepit chaos.
           </p>
         </div>
-        <!-- x-text -->
+
+        <!-- x-text - Set the text content of an element / display data -->
         <div class="my-4">
           The value of name is <span x-text="name" class="font-bold"></span>
         </div>
-        <!-- x-effect -->
-        <div x-effect="console.log(open);"></div>
-        <!-- x-model -->
+
+        <!-- x-effect - Execute a script each time one of its dependency change -->
+        <div x-effect="console.log(open)"></div>
+
+        <!-- x-model - Synchronize a piece of data with an input element -->
         <input
           x-model="search"
           type="text"
           class="w-full p-2 mt-6 mb-2 border"
-          placeholder="Search..."
+          placeholder="Search for something..."
         />
         <p>
-          <span class="font-bold">Searching for: </span>
+          <span class="font-bold">Searching for:</span>
           <span x-text="search"></span>
         </p>
-        <!-- x-if -->
+
+        <!-- x-if - Conditionally add/remove a block of HTML from the page entirely -->
         <template x-if="open">
-          <div class="p-2 mt-8 bg-gray-50">Template based on a condition.</div>
+          <div class="p-2 mt-8 bg-gray-50">Template based on a condition</div>
         </template>
-        <!-- x-for -->
-        <div
-          x-data="{posts: [{title: 'Post One'},{title: 'Post Two'},{title: 'Post Three'},{title: 'Post Four'}]}"
+
+        <!-- x-for - Loop over an array of data -->
+        <h3 class="mt-6 mb-3 text-2xl font-bold">Posts</h3>
+        <template x-for="post in posts">
+          <div x-text="post.title"></div>
+        </template>
+        <button
+          @click="posts.push({title: 'New Post'})"
+          class="px-4 py-2 mt-4 text-white bg-blue-800 rounded-lg"
         >
-          <h3 class="mt-6 mb-3 text-2xl font-bold">Posts</h3>
-          <template x-for="post in posts">
-            <div x-text="post.title"></div>
-          </template>
+          Add Post
+        </button>
+
+        <div class="my-6">
+          <!-- x-ref - Reference elements directly by their specified keys using the $refs magic property -->
+          <div x-ref="text">Hello World</div>
+
           <button
-            @click="posts.push({title:'NewPost'})"
-            class="px-4 py-2 mt-4 text-white bg-blue-800 rounded-lg"
+            @click="$refs.text.remove()"
+            class="p-2 text-white bg-black rounded-lg"
           >
-            Add Post
+            Click
           </button>
         </div>
+
+        <!-- x-html - Set the inner HTML of an element -->
+        <div x-html="(await axios.get('./partial.html')).data">...</div>
+
+        <!-- $el - Reference the current DOM element -->
+        <button
+          x-on:click="$el.innerHTML = 'Hello World'"
+          class="p-4 mt-4 border"
+        >
+          Replace Text
+        </button>
+
+        <!-- $watch - Watch a component property -->
+        <div x-init="$watch('posts', value => console.log(value))"></div>
       </div>
     </div>
   </body>
